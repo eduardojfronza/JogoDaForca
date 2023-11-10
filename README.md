@@ -1,5 +1,3 @@
-# JogoDaForca
-
 # Jogo da forca
 
 estrutura básica do projeto, onde farei um jogo da forca na linguagem C. Nesse arquivo tem todos os passos que trilhei para chegar no resultado final do jogo.
