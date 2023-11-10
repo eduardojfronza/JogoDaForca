@@ -768,40 +768,40 @@ int main {
     vamos deixar a palavra secreta aleatória. Primeiro precisamos criar um arquivo ********************.txt,******************** e colocar as palavras que queremos, mas antes das palavras colocar o numero de palavras que vai ter. Depois no **index.c:**
     ```c
     //incluir as libs
-#include <time.h>
-#include <stdlib.h>
-
-void escolhepalavra()
-{
-	FILE* f;
-	// a função fopone serve para abrir arquivos
-	// o primeiro parametro passamos o arquivo
-	// o segundo como queremos abri-lo
-	// nesse caso so queremos ler, entao o r (read)
-    f = fopen("palavras.txt", "r");
-		// caso o arquivo esteja comrrompido ou dê algum problema
-		if(f == 0) {
-        printf("Desculpe banco de dados nao disponivel /n");
-        exit(1);
-    }
-
-		int qtddepalavras;
-		// fscanf serve para ler arquivos
-		// primeiro parametro é o arquivo que vai ler
-		// o segundo para ler
-		// e o terceiro para pegar o que está armazenado no ponteiro
-    fscanf(f, "%d", &qtddepalavras);
-
-		// para gerar um numero aleatorio
-    srand(time(0));
-    int randomico = rand() % qtddepalavras;
-
-    for(int i = 0; i <= randomico; i++) {
-				// para ler e armazenar a palavra aleatoria
-        fscanf(f, "%s", palavrasecreta);
-    }
-
-		//para fechar o arquivo
-		fclose(f)
-}
+	#include <time.h>
+	#include <stdlib.h>
+	
+	void escolhepalavra()
+	{
+		FILE* f;
+		// a função fopone serve para abrir arquivos
+		// o primeiro parametro passamos o arquivo
+		// o segundo como queremos abri-lo
+		// nesse caso so queremos ler, entao o r (read)
+	    f = fopen("palavras.txt", "r");
+			// caso o arquivo esteja comrrompido ou dê algum problema
+			if(f == 0) {
+	        printf("Desculpe banco de dados nao disponivel /n");
+	        exit(1);
+	    }
+	
+			int qtddepalavras;
+			// fscanf serve para ler arquivos
+			// primeiro parametro é o arquivo que vai ler
+			// o segundo para ler
+			// e o terceiro para pegar o que está armazenado no ponteiro
+	    fscanf(f, "%d", &qtddepalavras);
+	
+			// para gerar um numero aleatorio
+	    srand(time(0));
+	    int randomico = rand() % qtddepalavras;
+	
+	    for(int i = 0; i <= randomico; i++) {
+					// para ler e armazenar a palavra aleatoria
+	        fscanf(f, "%s", palavrasecreta);
+	    }
+	
+			//para fechar o arquivo
+			fclose(f)
+	}
     ```
