@@ -65,22 +65,24 @@ void desenhaforca()
 
 void escolhepalavra()
 {
-    FILE* f;
-    
-    f = fopen("palavra.txt", "r");
+    FILE *f;
 
-    if(f == 0) {
-        printf("Desculpe banco de dados nao disponiveis \n");
+    f = fopen("palavras.txt", "r");
+
+    if (f == 0)
+    {
+        printf("Desculpe banco de dados nao disponivel \n");
         exit(1);
     }
-    
+
     int qtddepalavras;
     fscanf(f, "%d", &qtddepalavras);
 
     srand(time(0));
     int randomico = rand() % qtddepalavras;
 
-    for(int i = 0; i <= randomico; i++) {
+    for (int i = 0; i <= randomico; i++)
+    {
         fscanf(f, "%s", palavrasecreta);
     }
 
@@ -112,9 +114,12 @@ int enforcou()
     return erros >= 5;
 }
 
-int acertou() {
-    for(int i = 0; i < strlen(palavrasecreta); i++) {
-        if(!jachutou(palavrasecreta[i])) {
+int acertou()
+{
+    for (int i = 0; i < strlen(palavrasecreta); i++)
+    {
+        if (!jachutou(palavrasecreta[i]))
+        {
             return 0;
         }
     }
@@ -122,6 +127,41 @@ int acertou() {
     return 1;
 }
 
+void adicionapalavra()
+{
+    char quer;
+    char novapalavra[20];
+
+    printf("Voce deseja adicionar uma nova palavra no jogo? (S/N) \n");
+    scanf(" %c", &quer);
+
+    if (quer == 'S' | quer == 's')
+    {
+        printf("Qual a nova palavra?\n");
+        scanf("%s", novapalavra);
+    }
+
+    FILE *f;
+    // usamos r+ para ler e escrever no arquivo
+    f = fopen("palavras.txt", "r+");
+    if (f == 0)
+    {
+        printf("Desculpe banco de dados nao disponivel \n");
+        exit(1);
+    }
+
+    int qtd;
+    fscanf(f, "%d", &qtd);
+    qtd++;
+
+    fseek(f, 0, SEEK_SET);
+    fprintf(f, "%d", qtd);
+
+    fseek(f, 0, SEEK_END);
+    fprintf(f, "\n%s", novapalavra);
+
+    fclose(f);
+}
 
 int main()
 {
@@ -134,4 +174,5 @@ int main()
         chuta();
 
     } while (!acertou() && !enforcou());
+    adicionapalavra();
 }
