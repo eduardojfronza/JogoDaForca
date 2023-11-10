@@ -1,4 +1,3 @@
-
 // lista de funções que aparecerão no arquivo
 int enforcou();
 void abertura();
