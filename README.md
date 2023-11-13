@@ -803,3 +803,183 @@ int main {
 			fclose(f)
 	}
     ```
+    - **Escrevendo em um arquivo**
+    
+    vamos fazer com que o usuário consiga adicionar mais palavras ao jogo, para isso criamos uma função:
+    
+    ```c
+    void adicionapalavra() {
+        char quer;
+    
+        printf("Voce deseja adicionar uma nova palavra no jogo? (S/N)");
+        scanf(" %c", &quer);
+    
+        if(quer == 'S' | quer == 's') {
+            char novapalavra[20];
+            printf("Qual a nova palavra?\n");
+            scanf("%s", novapalavra);
+        }
+    }
+    ```
+    
+    agora precisamos ler o arquivo, isso já sabemos fazer:
+    
+    ```c
+    FILE* f;
+        // usamos r+ para ler e escrever no arquivo
+        f = fopen("palavras.txt", "r+");
+    
+        fprintf(f, "\n%s", novapalavra);
+    
+        fclose(f);
+    ```
+    
+    mas, lembre que o programa lê o arquivo em linhas e que temos o numero total de palavras. Para podermos aumentar o numero de palavras quando adicionarmos uma novas podemos fazer assim:
+    
+    ```c
+    	
+    		int qtd;
+    		// fscanf para ler o arquivo
+        fscanf(f,"%d", &qtd);
+    		// add mais um numero
+        qtd++;
+    		
+    		// como lê em linhas precisamos mover o ponterio usando fseek
+    		// f é o nome do arquivo
+    		// 0 a posição que queremos 
+    		// seek permite mover o ponteiro
+        fseek(f, 0, SEEK_SET);
+    		// reescrevendo o valor
+    		fprintf(f, "%d", qtd);
+    
+    		// depois precisamos voltar para o final do arquivo
+    		fseek(f, 0, SEEK_END);
+    		//para escrever no final do arquivo
+        fprintf(f, "\n%s", novapalavra);
+    ```
+    
+- **Evitando repetição de código**
+    
+    para otimizar o código vamos alterar o numero da lista para uma variável, no arquivo onde está as variáveis adicionamos o seguinte:
+    
+    ```c
+    #define TAMANHO_PALAVRA 20
+    ```
+    
+    agora no código substituímos para as variáveis.
+    
+    vamos criar uma mensagem de vitoria e derrota, depois do while colocamos esse código:
+    
+    ```c
+    if(acertou()) {
+            printf("Voce ganhou! \n");
+            printf("   _____________\n");
+            printf("  '._==_==_==_.'\n");
+            printf("  .-\\:         /-.\n");
+            printf(" | (|:.       |) |\n");
+            printf("  '-|:.       |-' \n");
+            printf("    \\::.      /\n");
+            printf("     '::.    '\n");
+            printf("       )   (\n");
+            printf("     _.'   '._\n");
+            
+        } else {
+            printf("Voce perdeu!\n");
+            printf("A palavra secreta era **%s** \n\n", palavrasecreta);
+            printf("███████████████████████████\n");
+            printf("███████▀▀▀░░░░░░░▀▀▀███████\n");
+            printf("████▀░░░░░░░░░░░░░░░░░▀████\n");
+            printf("███│░░░░░░░░░░░░░░░░░░░│███\n");
+            printf("██▌│░░░░░░░░░░░░░░░░░░░│▐██\n");
+            printf("██░└┐░░░░░░░░░░░░░░░░░┌┘░██\n");
+            printf("██░░└┐░░░░░░░░░░░░░░░┌┘░░██\n");
+            printf("██░░┌┘▄▄▄▄▄░░░░░▄▄▄▄▄└┐░░██\n");
+            printf("██▌░│██████▌░░░▐██████│░▐██\n");
+            printf("███░│▐███▀▀░░▄░░▀▀███▌│░███\n");
+            printf("██▀─┘░░░░░░░▐█▌░░░░░░░└─▀██\n");
+            printf("██▄░░░▄▄▄▓░░▀█▀░░▓▄▄▄░░░▄██\n");
+            printf("████▄─┘██▌░░░░░░░▐██└─▄████\n");
+            printf("█████░░▐█─┬┬┬┬┬┬┬─█▌░░█████\n");
+            printf("████▌░░░▀┬┼┼┼┼┼┼┼┬▀░░░▐████\n");
+            printf("█████▄░░░└┴┴┴┴┴┴┴┘░░░▄█████\n");
+            printf("███████▄░░░░░░░░░░░▄███████\n");
+            printf("██████████▄▄▄▄▄▄▄██████████\n");
+            printf("███████████████████████████\n");
+        }
+    ```
+    
+- **Extraindo mais funções**
+    
+    agora precisamos desenhar a forca, mas para não repetirmos vários printf, vamos reutilizar uma função já existente que é a ****************enforcou:****************
+    
+    ```c
+    // vamos tirar a logica dela e colocar em outra, ficando assim
+    int chuteserrado(){
+        int erros = 0;
+    
+        for (int i = 0; i < chutedados; i++)
+        {
+            int existe = 0;
+    
+            // Para percorrer o toda a palavra secreta
+            for (int j = 0; j < strlen(palavrasecreta); j++)
+            {
+                if (chutes[i] == palavrasecreta[j])
+                {
+                    existe = 1;
+                    break;
+                }
+            }
+    
+            if (!existe)
+                erros++;
+        }
+    
+        return erros;
+    }
+    
+    // a função enforcou vai ficar assim
+    int enforcou()
+    {
+        return chuteserrado() >= 5;
+    }
+    ```
+    
+    agora precisamos adicionar a nova função no arquivo de funções.
+    
+    e por fim desenhar a forca:
+  
+    ```c
+    void desenhaforca()
+	{
+	    int erros = chuteserrado();
+	
+	   printf("  _______       \n");
+	    printf(" |/      |      \n");
+	    printf(" |      %c%c%c  \n", (erros>=1 ? '(' : ' '), (erros >=1 ? '_' : ' '), (erros >=1 ? ')' : ' '));
+	    printf(" |      %c%c%c  \n", (erros>=3 ? '\\' : ' '), (erros >= 2 ? '|' : ' '), (erros >=3 ? '/' : ' '));
+	    printf(" |       %c     \n", (erros>=2 ? '|' : ' '));
+	    printf(" |      %c %c   \n", (erros>=4 ? '/' : ' '), (erros >= 4 ? '\\' : ' '));
+	    printf(" |              \n");
+	    printf("_|___           \n");
+	    printf("\n\n");
+
+	    // Looping para percorrer todas as letras da palavra secreta
+	    for (int i = 0; i < strlen(palavrasecreta); i++)
+	    {
+	        int achou = jachutou(palavrasecreta[i]);
+	
+	        if (achou)
+	        {
+	            // se achou a letra printa a letra na posição que ela está na palavra secreta
+	            printf("%c ", palavrasecreta[i]);
+	        }
+	        else
+	        {
+	            printf("_ ");
+	        }
+	    }
+	
+	    printf("\n");
+	}
+    ```
