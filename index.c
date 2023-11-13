@@ -71,7 +71,6 @@ void desenhaforca()
             printf("_ ");
         }
     }
-
     printf("\n");
 }
 
